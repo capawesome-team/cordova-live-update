@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="@capawesome/cordova-live-update"
+        version="0.0.1">
+
+    <name>LiveUpdate</name>
+    <description>Cordova plugin to update your app remotely in real-time.</description>
+    <license>MIT</license>
+    <keywords>cordova,live update,remote update,ota</keywords>
+    <repo>https://github.com/capawesome-team/cordova-live-update.git</repo>
+    <issue>https://github.com/capawesome-team/cordova-live-update/issues</issue>
+
+    <engines>
+        <engine name="cordova-android" version=">=13.0.0"/>
+        <engine name="cordova-ios" version=">=7.0.0"/>
+    </engines>
+
+    <js-module src="dist/plugin.js" name="LiveUpdate">
+        <clobbers target="cordova.plugins.LiveUpdate"/>
+    </js-module>
+
+    <!-- Preferences (Cordova `<preference>` mechanism in config.xml). -->
+    <preference name="APP_ID" default=""/>
+    <preference name="DEFAULT_CHANNEL" default=""/>
+    <preference name="AUTO_UPDATE_STRATEGY" default="none"/>
+    <preference name="HTTP_TIMEOUT" default="60000"/>
+    <preference name="PUBLIC_KEY" default=""/>
+    <preference name="READY_TIMEOUT" default="0"/>
+    <preference name="SERVER_DOMAIN" default="api.cloud.capawesome.io"/>
+    <preference name="AUTO_DELETE_BUNDLES" default="false"/>
+    <preference name="AUTO_BLOCK_ROLLED_BACK_BUNDLES" default="false"/>
+
+    <!-- =================== Android =================== -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="LiveUpdate">
+                <param name="android-package" value="io.capawesome.cordova.plugins.liveupdate.LiveUpdatePlugin"/>
+                <param name="onload" value="true"/>
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+        </config-file>
+
+        <config-file target="res/values/strings.xml" parent="/resources">
+            <string name="capawesome_live_update_app_id">$APP_ID</string>
+            <string name="capawesome_live_update_default_channel">$DEFAULT_CHANNEL</string>
+            <string name="capawesome_live_update_auto_update_strategy">$AUTO_UPDATE_STRATEGY</string>
+            <string name="capawesome_live_update_http_timeout">$HTTP_TIMEOUT</string>
+            <string name="capawesome_live_update_public_key">$PUBLIC_KEY</string>
+            <string name="capawesome_live_update_ready_timeout">$READY_TIMEOUT</string>
+            <string name="capawesome_live_update_server_domain">$SERVER_DOMAIN</string>
+            <string name="capawesome_live_update_auto_delete_bundles">$AUTO_DELETE_BUNDLES</string>
+            <string name="capawesome_live_update_auto_block_rolled_back_bundles">$AUTO_BLOCK_ROLLED_BACK_BUNDLES</string>
+        </config-file>
+
+        <!-- TODO(step 3): declare Android source-file entries here once Java sources are ported. -->
+        <!--
+        <source-file src="src/android/LiveUpdatePlugin.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
+        <framework src="src/android/capawesome-cordova-live-update.gradle"
+                   custom="true" type="gradleReference"/>
+        -->
+    </platform>
+
+    <!-- ===================== iOS ===================== -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="LiveUpdate">
+                <param name="ios-package" value="CapawesomeLiveUpdatePlugin"/>
+                <param name="onload" value="true"/>
+            </feature>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="CapawesomeLiveUpdateAppId">
+            <string>$APP_ID</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="CapawesomeLiveUpdateDefaultChannel">
+            <string>$DEFAULT_CHANNEL</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="CapawesomeLiveUpdateAutoUpdateStrategy">
+            <string>$AUTO_UPDATE_STRATEGY</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="CapawesomeLiveUpdateHttpTimeout">
+            <string>$HTTP_TIMEOUT</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="CapawesomeLiveUpdatePublicKey">
+            <string>$PUBLIC_KEY</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="CapawesomeLiveUpdateReadyTimeout">
+            <string>$READY_TIMEOUT</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="CapawesomeLiveUpdateServerDomain">
+            <string>$SERVER_DOMAIN</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="CapawesomeLiveUpdateAutoDeleteBundles">
+            <string>$AUTO_DELETE_BUNDLES</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="CapawesomeLiveUpdateAutoBlockRolledBackBundles">
+            <string>$AUTO_BLOCK_ROLLED_BACK_BUNDLES</string>
+        </config-file>
+
+        <!-- TODO(step 4): declare iOS source-file entries here once Swift sources are ported. -->
+        <!--
+        <header-file src="src/ios/CapawesomeLiveUpdatePlugin.h"/>
+        <source-file src="src/ios/CapawesomeLiveUpdatePlugin.m"/>
+        <source-file src="src/ios/CapawesomeLiveUpdate.swift"/>
+        <resource-file src="src/ios/CapawesomeLiveUpdate.bundle" target="CapawesomeLiveUpdate.bundle"/>
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods>
+                <pod name="Alamofire" spec="~> 5.9"/>
+                <pod name="ZIPFoundation" spec="~> 0.9"/>
+            </pods>
+        </podspec>
+        -->
+    </platform>
+</plugin>
