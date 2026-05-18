@@ -201,21 +201,56 @@
             <string>$AUTO_BLOCK_ROLLED_BACK_BUNDLES</string>
         </config-file>
 
-        <!-- TODO(step 4): declare iOS source-file entries here once Swift sources are ported. -->
-        <!--
-        <header-file src="src/ios/CapawesomeLiveUpdatePlugin.h"/>
-        <source-file src="src/ios/CapawesomeLiveUpdatePlugin.m"/>
-        <source-file src="src/ios/CapawesomeLiveUpdate.swift"/>
-        <resource-file src="src/ios/CapawesomeLiveUpdate.bundle" target="CapawesomeLiveUpdate.bundle"/>
         <podspec>
             <config>
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
-            <pods>
+            <pods use-frameworks="true">
                 <pod name="Alamofire" spec="~> 5.9"/>
                 <pod name="ZIPFoundation" spec="~> 0.9"/>
             </pods>
         </podspec>
-        -->
+
+        <source-file src="src/ios/LiveUpdate.swift"/>
+        <source-file src="src/ios/LiveUpdateArtifactType.swift"/>
+        <source-file src="src/ios/LiveUpdateChannelResult.swift"/>
+        <source-file src="src/ios/LiveUpdateConfig.swift"/>
+        <source-file src="src/ios/LiveUpdateDeleteBundleOptions.swift"/>
+        <source-file src="src/ios/LiveUpdateDownloadBundleOptions.swift"/>
+        <source-file src="src/ios/LiveUpdateDownloadBundleProgressEvent.swift"/>
+        <source-file src="src/ios/LiveUpdateError.swift"/>
+        <source-file src="src/ios/LiveUpdateFetchChannelsOptions.swift"/>
+        <source-file src="src/ios/LiveUpdateFetchChannelsResult.swift"/>
+        <source-file src="src/ios/LiveUpdateFetchLatestBundleOptions.swift"/>
+        <source-file src="src/ios/LiveUpdateFetchLatestBundleResult.swift"/>
+        <source-file src="src/ios/LiveUpdateGetBlockedBundlesResult.swift"/>
+        <source-file src="src/ios/LiveUpdateGetBundlesResult.swift"/>
+        <source-file src="src/ios/LiveUpdateGetChannelResult.swift"/>
+        <source-file src="src/ios/LiveUpdateGetChannelsResponseItem.swift"/>
+        <source-file src="src/ios/LiveUpdateGetConfigResult.swift"/>
+        <source-file src="src/ios/LiveUpdateGetCurrentBundleResult.swift"/>
+        <source-file src="src/ios/LiveUpdateGetCustomIdResult.swift"/>
+        <source-file src="src/ios/LiveUpdateGetDeviceIdResult.swift"/>
+        <source-file src="src/ios/LiveUpdateGetDownloadedBundlesResult.swift"/>
+        <source-file src="src/ios/LiveUpdateGetLatestBundleResponse.swift"/>
+        <source-file src="src/ios/LiveUpdateGetNextBundleResult.swift"/>
+        <source-file src="src/ios/LiveUpdateGetVersionCodeResult.swift"/>
+        <source-file src="src/ios/LiveUpdateGetVersionNameResult.swift"/>
+        <source-file src="src/ios/LiveUpdateHttpClient.swift"/>
+        <source-file src="src/ios/LiveUpdateIsSyncingResult.swift"/>
+        <source-file src="src/ios/LiveUpdateManifest.swift"/>
+        <source-file src="src/ios/LiveUpdateManifestItem.swift"/>
+        <source-file src="src/ios/LiveUpdateNextBundleSetEvent.swift"/>
+        <source-file src="src/ios/LiveUpdatePlugin.swift"/>
+        <source-file src="src/ios/LiveUpdatePreferences.swift"/>
+        <source-file src="src/ios/LiveUpdateReadyResult.swift"/>
+        <source-file src="src/ios/LiveUpdateResult.swift"/>
+        <source-file src="src/ios/LiveUpdateSchemeHandler.swift"/>
+        <source-file src="src/ios/LiveUpdateSetChannelOptions.swift"/>
+        <source-file src="src/ios/LiveUpdateSetConfigOptions.swift"/>
+        <source-file src="src/ios/LiveUpdateSetCustomIdOptions.swift"/>
+        <source-file src="src/ios/LiveUpdateSetNextBundleOptions.swift"/>
+        <source-file src="src/ios/LiveUpdateSyncOptions.swift"/>
+        <source-file src="src/ios/LiveUpdateSyncResult.swift"/>
     </platform>
 </plugin>
