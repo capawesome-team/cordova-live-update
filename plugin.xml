@@ -56,13 +56,112 @@
             <string name="capawesome_live_update_auto_block_rolled_back_bundles">$AUTO_BLOCK_ROLLED_BACK_BUNDLES</string>
         </config-file>
 
-        <!-- TODO(step 3): declare Android source-file entries here once Java sources are ported. -->
-        <!--
-        <source-file src="src/android/LiveUpdatePlugin.java"
-                     target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
         <framework src="src/android/capawesome-cordova-live-update.gradle"
                    custom="true" type="gradleReference"/>
-        -->
+
+        <!-- Top-level classes -->
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/LiveUpdate.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/LiveUpdateConfig.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/LiveUpdateHttpClient.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/LiveUpdatePathHandler.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/LiveUpdatePlugin.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/LiveUpdatePreferences.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
+
+        <!-- classes/ -->
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/Manifest.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/ManifestItem.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes"/>
+
+        <!-- classes/api/ -->
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/api/GetChannelsResponseItem.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/api"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/api/GetLatestBundleResponse.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/api"/>
+
+        <!-- classes/events/ -->
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/events/DownloadBundleProgressEvent.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/events"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/events/NextBundleSetEvent.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/events"/>
+
+        <!-- classes/options/ -->
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/options/DeleteBundleOptions.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/options"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/options/DownloadBundleOptions.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/options"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/options/FetchChannelsOptions.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/options"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/options/FetchLatestBundleOptions.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/options"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/options/SetChannelOptions.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/options"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/options/SetConfigOptions.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/options"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/options/SetCustomIdOptions.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/options"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/options/SetNextBundleOptions.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/options"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/options/SyncOptions.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/options"/>
+
+        <!-- classes/results/ -->
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/ChannelResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/FetchChannelsResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/FetchLatestBundleResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/GetBlockedBundlesResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/GetBundlesResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/GetChannelResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/GetConfigResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/GetCurrentBundleResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/GetCustomIdResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/GetDeviceIdResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/GetDownloadedBundlesResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/GetNextBundleResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/GetVersionCodeResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/GetVersionNameResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/IsSyncingResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/ReadyResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/results/SyncResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/results"/>
+
+        <!-- enums/ -->
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/enums/ArtifactType.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/enums"/>
+
+        <!-- interfaces/ -->
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/interfaces/Callback.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/interfaces"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/interfaces/DownloadProgressCallback.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/interfaces"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/interfaces/EmptyCallback.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/interfaces"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/interfaces/NonEmptyCallback.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/interfaces"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/interfaces/Result.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/interfaces"/>
     </platform>
 
     <!-- ===================== iOS ===================== -->
