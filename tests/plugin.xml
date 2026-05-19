@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="@capawesome/cordova-live-update-tests"
+        version="0.1.0">
+
+    <name>LiveUpdate Tests</name>
+    <license>MIT</license>
+
+    <dependency id="cordova-plugin-test-framework"/>
+    <dependency id="@capawesome/cordova-live-update"/>
+
+    <js-module src="tests.js" name="tests"/>
+</plugin>

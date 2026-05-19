@@ -45,8 +45,9 @@
     "capgo"
   ],
   "scripts": {
-    "build": "npm run clean && tsc && rollup -c rollup.config.mjs",
+    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
     "clean": "rimraf dist",
+    "docgen": "docgen --api LiveUpdatePlugin --output-readme README.md --output-json dist/docs.json",
     "watch": "tsc --watch",
     "lint": "npm run eslint && npm run prettier -- --check",
     "fmt": "npm run eslint -- --fix && npm run prettier -- --write",
@@ -55,6 +56,7 @@
     "prepare": "npm run build"
   },
   "devDependencies": {
+    "@capacitor/docgen": "^0.3.1",
     "@ionic/eslint-config": "0.4.0",
     "@types/cordova": "0.0.34",
     "eslint": "8.57.0",
@@ -66,6 +68,9 @@
   },
   "cordova": {
     "id": "@capawesome/cordova-live-update",
-    "platforms": ["android", "ios"]
+    "platforms": [
+      "android",
+      "ios"
+    ]
   }
 }
