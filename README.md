@@ -309,7 +309,6 @@ const isNewBundleAvailable = async () => {
 * [`sync(...)`](#sync)
 * [`addListener('downloadBundleProgress', ...)`](#addlistenerdownloadbundleprogress-)
 * [`addListener('nextBundleSet', ...)`](#addlistenernextbundleset-)
-* [`addListener('reloaded', ...)`](#addlistenerreloaded-)
 * [`removeAllListeners()`](#removealllisteners)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
@@ -842,33 +841,6 @@ either through automatic updates or manual calls to `setNextBundle()`.
 --------------------
 
 
-### addListener('reloaded', ...)
-
-```typescript
-addListener(eventName: 'reloaded', listenerFunc: ReloadedListener) => any
-```
-
-Listen for when the app is reloaded.
-
-This event is triggered after the `reload()` method is called
-and the app has been reloaded.
-
-**Note:** To verify whether an update was successfully applied after a reload,
-use the `ready()` method instead. The `ready()` method provides detailed information
-about the current bundle, previous bundle, and whether a rollback occurred.
-
-| Param              | Type                                                          |
-| ------------------ | ------------------------------------------------------------- |
-| **`eventName`**    | <code>'reloaded'</code>                                       |
-| **`listenerFunc`** | <code><a href="#reloadedlistener">ReloadedListener</a></code> |
-
-**Returns:** <code>any</code>
-
-**Since:** 0.1.0
-
---------------------
-
-
 ### removeAllListeners()
 
 ```typescript
@@ -1130,13 +1102,6 @@ Listener for the download progress of a bundle.
 Listener for when a bundle is set as the next bundle.
 
 <code>(event: <a href="#nextbundlesetevent">NextBundleSetEvent</a>): void</code>
-
-
-#### ReloadedListener
-
-Listener for when the app is reloaded.
-
-<code>(): void</code>
 
 </docgen-api>
 

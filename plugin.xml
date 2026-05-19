@@ -20,11 +20,17 @@
     </js-module>
 
     <!-- Preferences (Cordova `<preference>` mechanism in config.xml). -->
-    <preference name="APP_ID" default=""/>
-    <preference name="DEFAULT_CHANNEL" default=""/>
+    <!--
+      Cordova-lib treats `default=""` as "no default" and refuses to install when
+      such a preference is missing. We use a single space as a sentinel for
+      "unset" instead; the native code trims and treats whitespace-only values
+      as null.
+    -->
+    <preference name="APP_ID" default=" "/>
+    <preference name="DEFAULT_CHANNEL" default=" "/>
     <preference name="AUTO_UPDATE_STRATEGY" default="none"/>
     <preference name="HTTP_TIMEOUT" default="60000"/>
-    <preference name="PUBLIC_KEY" default=""/>
+    <preference name="PUBLIC_KEY" default=" "/>
     <preference name="READY_TIMEOUT" default="0"/>
     <preference name="SERVER_DOMAIN" default="api.cloud.capawesome.io"/>
     <preference name="AUTO_DELETE_BUNDLES" default="false"/>

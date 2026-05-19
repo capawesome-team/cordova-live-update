@@ -1110,7 +1110,7 @@ public class LiveUpdate {
         if (resId == 0) {
             return null;
         }
-        String value = plugin.getContext().getResources().getString(resId);
+        String value = plugin.getContext().getResources().getString(resId).trim();
         return value.isEmpty() ? null : value;
     }
 
@@ -1301,8 +1301,6 @@ public class LiveUpdate {
             pathHandler.setActiveBundleDir(buildBundleDirectoryFor(bundleId));
         }
         plugin.reloadWebView();
-        // Notify listeners
-        notifyReloadedListeners();
     }
 
     /**
@@ -1318,10 +1316,6 @@ public class LiveUpdate {
     private void notifyNextBundleSetListeners(@Nullable String bundleId) {
         NextBundleSetEvent event = new NextBundleSetEvent(bundleId);
         plugin.notifyNextBundleSetListeners(event);
-    }
-
-    private void notifyReloadedListeners() {
-        plugin.notifyReloadedListeners();
     }
 
     private void addBlockedBundleId(@NonNull String bundleId) {

@@ -63,7 +63,6 @@ public class LiveUpdatePlugin extends CordovaPlugin {
     public static final String ERROR_LISTENER_ID_MISSING = "listenerId must be provided.";
     public static final String EVENT_DOWNLOAD_BUNDLE_PROGRESS = "downloadBundleProgress";
     public static final String EVENT_NEXT_BUNDLE_SET = "nextBundleSet";
-    public static final String EVENT_RELOADED = "reloaded";
 
     @Nullable
     private LiveUpdateConfig config;
@@ -392,10 +391,6 @@ public class LiveUpdatePlugin extends CordovaPlugin {
         }
     }
 
-    public void notifyReloadedListeners() {
-        notifyListeners(EVENT_RELOADED, new JSONObject());
-    }
-
     private void notifyListeners(@NonNull String eventName, @NonNull JSONObject data) {
         for (ListenerRegistration entry : listeners.values()) {
             if (!entry.eventName.equals(eventName)) {
@@ -529,7 +524,10 @@ public class LiveUpdatePlugin extends CordovaPlugin {
         if (resId == 0) {
             return null;
         }
-        return res.getString(resId);
+        // Cordova injects a single-space sentinel for "unset" preferences (see
+        // plugin.xml). Treat any whitespace-only value as null.
+        String value = res.getString(resId).trim();
+        return value.isEmpty() ? null : value;
     }
 
     private static int parseIntSafe(@Nullable String value, int fallback) {

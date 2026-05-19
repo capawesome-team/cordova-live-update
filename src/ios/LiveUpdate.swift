@@ -563,8 +563,11 @@ import UIKit
     }
 
     private func getNativeChannel() -> String? {
-        let value = Bundle.main.object(forInfoDictionaryKey: "LiveUpdateDefaultChannel") as? String
-        return (value?.isEmpty ?? true) ? nil : value
+        guard let value = Bundle.main.object(forInfoDictionaryKey: "CapawesomeLiveUpdateDefaultChannel") as? String else {
+            return nil
+        }
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
     }
 
     private func getChecksumForFile(url: URL) throws -> String {
@@ -710,7 +713,6 @@ import UIKit
             schemeHandler.activeBundleDir = nil
         }
         plugin.reloadWebView()
-        notifyReloadedListeners()
     }
 
     /// - Parameter bundleId: The bundle ID to set as the next bundle. If `nil`, the default bundle will be used.
@@ -722,10 +724,6 @@ import UIKit
     private func notifyNextBundleSetListeners(_ bundleId: String?) {
         let event = LiveUpdateNextBundleSetEvent(bundleId: bundleId)
         plugin.notifyNextBundleSetListeners(event)
-    }
-
-    private func notifyReloadedListeners() {
-        plugin.notifyReloadedListeners()
     }
 
     private func addBlockedBundleId(_ bundleId: String) {

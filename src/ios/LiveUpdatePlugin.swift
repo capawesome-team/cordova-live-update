@@ -11,7 +11,6 @@ public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
 
     private let eventDownloadBundleProgress = "downloadBundleProgress"
     private let eventNextBundleSet = "nextBundleSet"
-    private let eventReloaded = "reloaded"
 
     private static let errorAppIdMissing = "appId must be configured."
     private static let errorBundleIdMissing = "bundleId must be provided."
@@ -69,10 +68,6 @@ public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
 
     func notifyNextBundleSetListeners(_ event: LiveUpdateNextBundleSetEvent) {
         notifyJSListeners(eventName: eventNextBundleSet, data: event.toJSObject())
-    }
-
-    func notifyReloadedListeners() {
-        notifyJSListeners(eventName: eventReloaded, data: [:])
     }
 
     public func reloadWebView() {
@@ -487,16 +482,27 @@ public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
     private func loadConfig() -> LiveUpdateConfig {
         var cfg = LiveUpdateConfig()
         let info = Bundle.main.infoDictionary ?? [:]
-        if let appId = info["LiveUpdateAppId"] as? String, !appId.isEmpty { cfg.appId = appId }
-        if let defaultChannel = info["LiveUpdateDefaultChannel"] as? String, !defaultChannel.isEmpty { cfg.defaultChannel = defaultChannel }
-        if let strategy = info["LiveUpdateAutoUpdateStrategy"] as? String, !strategy.isEmpty { cfg.autoUpdateStrategy = strategy }
-        if let timeout = parseInt(info["LiveUpdateHttpTimeout"]) { cfg.httpTimeout = timeout }
-        if let publicKey = info["LiveUpdatePublicKey"] as? String, !publicKey.isEmpty { cfg.publicKey = publicKey }
-        if let timeout = parseInt(info["LiveUpdateReadyTimeout"]) { cfg.readyTimeout = timeout }
-        if let domain = info["LiveUpdateServerDomain"] as? String, !domain.isEmpty { cfg.serverDomain = domain }
-        if let value = parseBool(info["LiveUpdateAutoDeleteBundles"]) { cfg.autoDeleteBundles = value }
-        if let value = parseBool(info["LiveUpdateAutoBlockRolledBackBundles"]) { cfg.autoBlockRolledBackBundles = value }
+        // Note: plist keys keep the `CapawesomeLiveUpdate` prefix because that
+        // is the external contract injected by plugin.xml `<config-file>`
+        // entries. Cordova-lib's `default=" "` sentinel becomes a single-space
+        // string in the host app's Info.plist; we trim and treat whitespace-only
+        // as unset.
+        if let appId = trimmed(info["CapawesomeLiveUpdateAppId"]) { cfg.appId = appId }
+        if let defaultChannel = trimmed(info["CapawesomeLiveUpdateDefaultChannel"]) { cfg.defaultChannel = defaultChannel }
+        if let strategy = trimmed(info["CapawesomeLiveUpdateAutoUpdateStrategy"]) { cfg.autoUpdateStrategy = strategy }
+        if let timeout = parseInt(info["CapawesomeLiveUpdateHttpTimeout"]) { cfg.httpTimeout = timeout }
+        if let publicKey = trimmed(info["CapawesomeLiveUpdatePublicKey"]) { cfg.publicKey = publicKey }
+        if let timeout = parseInt(info["CapawesomeLiveUpdateReadyTimeout"]) { cfg.readyTimeout = timeout }
+        if let domain = trimmed(info["CapawesomeLiveUpdateServerDomain"]) { cfg.serverDomain = domain }
+        if let value = parseBool(info["CapawesomeLiveUpdateAutoDeleteBundles"]) { cfg.autoDeleteBundles = value }
+        if let value = parseBool(info["CapawesomeLiveUpdateAutoBlockRolledBackBundles"]) { cfg.autoBlockRolledBackBundles = value }
         return cfg
+    }
+
+    private func trimmed(_ value: Any?) -> String? {
+        guard let string = value as? String else { return nil }
+        let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
     }
 
     private func parseInt(_ value: Any?) -> Int? {
