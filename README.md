@@ -75,8 +75,8 @@ Then create `build-extras.gradle` next to `config.xml`:
 
 ```groovy
 android {
-    defaultConfig {
-        resValue "string", "capawesome_live_update_default_channel", "production-" + defaultConfig.versionCode
+    applicationVariants.all { variant ->
+        variant.resValue "string", "capawesome_live_update_default_channel", "production-${variant.versionCode}"
     }
 }
 ```

@@ -485,23 +485,23 @@ public class LiveUpdatePlugin extends CordovaPlugin {
         String pkg = ctx.getPackageName();
 
         String appId = readStringRes(res, pkg, "capawesome_live_update_app_id");
-        if (appId != null && !appId.isEmpty()) {
+        if (appId != null) {
             cfg.setAppId(appId);
         }
         String defaultChannel = readStringRes(res, pkg, "capawesome_live_update_default_channel");
-        if (defaultChannel != null && !defaultChannel.isEmpty()) {
+        if (defaultChannel != null) {
             cfg.setDefaultChannel(defaultChannel);
         }
         String autoUpdateStrategy = readStringRes(res, pkg, "capawesome_live_update_auto_update_strategy");
-        if (autoUpdateStrategy != null && !autoUpdateStrategy.isEmpty()) {
+        if (autoUpdateStrategy != null) {
             cfg.setAutoUpdateStrategy(autoUpdateStrategy);
         }
         String publicKey = readStringRes(res, pkg, "capawesome_live_update_public_key");
-        if (publicKey != null && !publicKey.isEmpty()) {
+        if (publicKey != null) {
             cfg.setPublicKey(publicKey);
         }
         String serverDomain = readStringRes(res, pkg, "capawesome_live_update_server_domain");
-        if (serverDomain != null && !serverDomain.isEmpty()) {
+        if (serverDomain != null) {
             cfg.setServerDomain(serverDomain);
         }
         cfg.setHttpTimeout(parseIntSafe(readStringRes(res, pkg, "capawesome_live_update_http_timeout"), cfg.getHttpTimeout()));
@@ -519,13 +519,13 @@ public class LiveUpdatePlugin extends CordovaPlugin {
     }
 
     @Nullable
-    private static String readStringRes(@NonNull Resources res, @NonNull String pkg, @NonNull String key) {
+    static String readStringRes(@NonNull Resources res, @NonNull String pkg, @NonNull String key) {
         int resId = res.getIdentifier(key, "string", pkg);
         if (resId == 0) {
             return null;
         }
         // Cordova injects a single-space sentinel for "unset" preferences (see
-        // plugin.xml). Treat any whitespace-only value as null.
+        // plugin.xml). Treat whitespace-only values as null.
         String value = res.getString(resId).trim();
         return value.isEmpty() ? null : value;
     }

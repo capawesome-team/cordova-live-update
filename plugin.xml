@@ -50,7 +50,13 @@
             <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
         </config-file>
 
-        <config-file target="res/values/strings.xml" parent="/resources">
+        <!-- `<resource-file>` seeds an empty skeleton so the next `<config-file>` can target it.
+             Filename intentionally does NOT end in `strings.xml` — cordova-common's
+             `endsWith('strings.xml')` shortcut would otherwise hijack our target.
+             See https://github.com/apache/cordova-android/issues/1922 -->
+        <resource-file src="src/android/capawesome-live-update.xml"
+                       target="res/values/capawesome-live-update.xml"/>
+        <config-file target="res/values/capawesome-live-update.xml" parent="/resources">
             <string name="capawesome_live_update_app_id">$APP_ID</string>
             <string name="capawesome_live_update_default_channel">$DEFAULT_CHANNEL</string>
             <string name="capawesome_live_update_auto_update_strategy">$AUTO_UPDATE_STRATEGY</string>

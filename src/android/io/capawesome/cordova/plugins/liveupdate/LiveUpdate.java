@@ -1103,15 +1103,15 @@ public class LiveUpdate {
 
     @Nullable
     private String getNativeChannel() {
-        int resId = plugin
-            .getContext()
-            .getResources()
-            .getIdentifier("capawesome_live_update_default_channel", "string", plugin.getContext().getPackageName());
-        if (resId == 0) {
-            return null;
-        }
-        String value = plugin.getContext().getResources().getString(resId).trim();
-        return value.isEmpty() ? null : value;
+        // Reads `capawesome_live_update_default_channel` from the merged string
+        // resource namespace. The plugin seeds this name in our own strings file
+        // (see plugin.xml); app developers can override it with `resValue` for
+        // Versioned Channels — `resValue` wins per AGP's merge order.
+        return LiveUpdatePlugin.readStringRes(
+            plugin.getContext().getResources(),
+            plugin.getContext().getPackageName(),
+            "capawesome_live_update_default_channel"
+        );
     }
 
     /**
