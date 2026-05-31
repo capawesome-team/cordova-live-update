@@ -56,7 +56,7 @@ public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
         return schemeHandler?.handle(task: task) ?? false
     }
 
-    public func stopSchemeTask(_ task: WKURLSchemeTask) {
+    public func stop(_ task: WKURLSchemeTask) {
         schemeHandler?.stop(task: task)
     }
 
@@ -367,7 +367,7 @@ public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
         listenersLock.unlock()
         // Keep the callback alive so we can deliver future events to it.
         let result = CDVPluginResult(status: .noResult)
-        result?.keepCallback = NSNumber(value: true)
+        result.keepCallback = NSNumber(value: true)
         commandDelegate.send(result, callbackId: command.callbackId)
     }
 
@@ -384,7 +384,7 @@ public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
         if let removed = removed {
             // Release the JS callback that was kept alive by addListener.
             let release = CDVPluginResult(status: .noResult)
-            release?.keepCallback = NSNumber(value: false)
+            release.keepCallback = NSNumber(value: false)
             commandDelegate.send(release, callbackId: removed.callbackId)
         }
         resolve(command)
@@ -398,7 +398,7 @@ public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
         listenersLock.unlock()
         for entry in toRelease {
             let release = CDVPluginResult(status: .noResult)
-            release?.keepCallback = NSNumber(value: false)
+            release.keepCallback = NSNumber(value: false)
             commandDelegate.send(release, callbackId: entry.callbackId)
         }
         resolve(command)
@@ -412,7 +412,7 @@ public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
         listenersLock.unlock()
         for entry in recipients {
             let result = CDVPluginResult(status: .ok, messageAs: data)
-            result?.keepCallback = NSNumber(value: true)
+            result.keepCallback = NSNumber(value: true)
             commandDelegate.send(result, callbackId: entry.callbackId)
         }
     }

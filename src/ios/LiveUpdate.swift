@@ -32,15 +32,17 @@ import UIKit
         self.schemeHandler = schemeHandler
         super.init()
 
+        // Check version and reset config (and the next bundle) if the native
+        // app version changed. This must run before promoting the next bundle
+        // below so that a stale, now-incompatible bundle is not activated.
+        checkAndResetConfigIfVersionChanged()
+
         // Promote the persisted next bundle to active for this session. This
         // matches Capacitor's launch-time behavior where the persisted next
         // path becomes the current server base path on each cold start.
         if let nextBundleId = preferences.getNextBundleId(), hasBundleById(nextBundleId) {
             schemeHandler.activeBundleDir = buildBundleURLFor(bundleId: nextBundleId)
         }
-
-        // Check version and reset config if version changed
-        checkAndResetConfigIfVersionChanged()
 
         // Set the device ID on the HTTP client (after any potential config reset)
         self.httpClient.setDeviceId(getDeviceId())
@@ -239,9 +241,7 @@ import UIKit
     }
 
     @objc public func setCustomId(_ options: LiveUpdateSetCustomIdOptions, completion: @escaping (Error?) -> Void) {
-        if let customId = options.getCustomId() {
-            preferences.setCustomId(customId)
-        }
+        preferences.setCustomId(options.getCustomId())
         completion(nil)
     }
 
@@ -760,6 +760,12 @@ import UIKit
                 "[\(LiveUpdatePlugin.tag)] App version changed (last: \(lastVersionName ?? "nil")/\(lastVersionCode ?? "nil"), current: \(currentVersionName)/\(currentVersionCode)), resetting config."
             )
             resetConfig()
+            // Reset the next bundle to the built-in one. The previously persisted
+            // bundle was built for the old native binary and is no longer
+            // compatible. Capacitor gets this for free because its core resets the
+            // server base path on a native update; Cordova has no such mechanism,
+            // so we must do it ourselves.
+            preferences.setNextBundleId(nil)
             preferences.setLastVersionCode(currentVersionCode)
             preferences.setLastVersionName(currentVersionName)
         }

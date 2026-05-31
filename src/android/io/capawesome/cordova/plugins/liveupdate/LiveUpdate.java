@@ -118,6 +118,11 @@ public class LiveUpdate {
         this.pathHandler = pathHandler;
         this.preferences = new LiveUpdatePreferences(plugin.getContext());
 
+        // Check version and reset config (and the next bundle) if the native app
+        // version changed. This must run before promoting the next bundle below so
+        // that a stale, now-incompatible bundle is not activated.
+        checkAndResetConfigIfVersionChanged();
+
         // Promote the persisted next bundle to active for this session (matches
         // Capacitor's launch-time behavior, where the persisted next path becomes
         // the current server base path on each cold start).
@@ -125,9 +130,6 @@ public class LiveUpdate {
         if (nextBundleId != null && hasBundleById(nextBundleId)) {
             pathHandler.setActiveBundleDir(buildBundleDirectoryFor(nextBundleId));
         }
-
-        // Check version and reset config if version changed
-        checkAndResetConfigIfVersionChanged();
 
         // Set the device ID on the HTTP client (after any potential config reset)
         this.httpClient.setDeviceId(getDeviceId());
@@ -1368,6 +1370,12 @@ public class LiveUpdate {
                 "App version changed (last: " + lastVersionCode + ", current: " + currentVersionCode + "), resetting config."
             );
             resetConfig();
+            // Reset the next bundle to the built-in one. The previously persisted
+            // bundle was built for the old native binary and is no longer
+            // compatible. Capacitor gets this for free because its core resets the
+            // server base path on a native update; Cordova has no such mechanism,
+            // so we must do it ourselves.
+            preferences.setNextBundleId(null);
             preferences.setLastVersionCode(currentVersionCode);
         }
     }
