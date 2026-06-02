@@ -120,14 +120,22 @@ public class LiveUpdateSchemeHandler: NSObject {
             let byteRange = rangeHeader.dropFirst("bytes=".count)
             let parts = byteRange.split(separator: "-", maxSplits: 1, omittingEmptySubsequences: false)
             let start: UInt64 = UInt64(parts.first.map(String.init) ?? "") ?? 0
-            let end: UInt64
+            var end: UInt64
             if parts.count > 1, !parts[1].isEmpty, let parsed = UInt64(parts[1]) {
                 end = parsed
             } else {
                 end = fileSize > 0 ? fileSize - 1 : 0
             }
 
-            if start >= fileSize {
+            // Clamp the end to the last valid byte so an over-large range does
+            // not produce an invalid Content-Length or read past EOF.
+            if fileSize > 0 {
+                end = min(end, fileSize - 1)
+            }
+
+            // An unsatisfiable range (start past EOF, or end before start)
+            // must be answered with 416 rather than underflowing `end - start`.
+            if start >= fileSize || end < start {
                 headers["Content-Range"] = "bytes */\(fileSize)"
                 let response = HTTPURLResponse(
                     url: requestURL,
@@ -177,6 +185,7 @@ public class LiveUpdateSchemeHandler: NSObject {
 
         let bufferSize = 64 * 1024
         while isActive(wrapper) && responseSent < responseSize {
+            var reachedEOF = false
             autoreleasepool {
                 let chunkSize = min(UInt64(bufferSize), responseSize - responseSent)
                 let data: Data
@@ -186,12 +195,18 @@ public class LiveUpdateSchemeHandler: NSObject {
                     data = fileHandle.readData(ofLength: Int(chunkSize))
                 }
                 if data.isEmpty {
+                    // `return` only exits the autoreleasepool closure; flag EOF
+                    // so the enclosing loop terminates instead of spinning.
+                    reachedEOF = true
                     return
                 }
                 if isActive(wrapper) {
                     task.didReceive(data)
                 }
                 responseSent += UInt64(data.count)
+            }
+            if reachedEOF {
+                break
             }
         }
 

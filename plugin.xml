@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         id="@capawesome/cordova-live-update"
-        version="0.0.1">
+        version="0.1.0">
 
     <name>LiveUpdate</name>
     <description>Cordova plugin to update your app remotely in real-time.</description>

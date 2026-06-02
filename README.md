@@ -2,8 +2,6 @@
 
 Cordova plugin that allows you to update your app remotely in real-time without requiring users to download a new version from the app store, also known as Over-the-Air (OTA) updates.
 
-This is a Cordova port of [`@capawesome/capacitor-live-update`](https://github.com/capawesome-team/capacitor-plugins/tree/main/packages/live-update) with full API parity. If you are using Capacitor, use the Capacitor plugin instead.
-
 ## Features
 
 - 🔋 Supports **Android and iOS**
