@@ -1,0 +1,76 @@
+{
+  "name": "@capawesome/cordova-live-update",
+  "version": "0.1.0",
+  "description": "Cordova plugin to update your app remotely in real-time.",
+  "main": "dist/plugin.js",
+  "types": "dist/esm/index.d.ts",
+  "files": [
+    "dist/",
+    "src/android/",
+    "src/ios/",
+    "plugin.xml",
+    "LICENSE",
+    "README.md"
+  ],
+  "author": "Robin Genz <mail@robingenz.dev>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/capawesome-team/cordova-live-update.git"
+  },
+  "bugs": {
+    "url": "https://github.com/capawesome-team/cordova-live-update/issues"
+  },
+  "homepage": "https://capawesome.io/plugins/live-update/",
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/capawesome-team/"
+    },
+    {
+      "type": "opencollective",
+      "url": "https://opencollective.com/capawesome"
+    }
+  ],
+  "keywords": [
+    "cordova",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "plugin",
+    "native",
+    "live update",
+    "remote update",
+    "ota",
+    "capgo"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
+    "clean": "rimraf dist",
+    "docgen": "docgen --api LiveUpdatePlugin --output-readme README.md --output-json dist/docs.json",
+    "watch": "tsc --watch",
+    "lint": "npm run eslint && npm run prettier -- --check",
+    "fmt": "npm run eslint -- --fix && npm run prettier -- --write",
+    "eslint": "eslint . --ext ts",
+    "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@capacitor/docgen": "^0.3.1",
+    "@ionic/eslint-config": "0.4.0",
+    "@types/cordova": "0.0.34",
+    "eslint": "8.57.0",
+    "prettier": "3.4.2",
+    "prettier-plugin-java": "2.6.7",
+    "rimraf": "6.1.2",
+    "rollup": "4.53.3",
+    "typescript": "5.9.3"
+  },
+  "cordova": {
+    "id": "@capawesome/cordova-live-update",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  }
+}

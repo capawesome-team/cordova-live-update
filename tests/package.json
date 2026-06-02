@@ -1,0 +1,11 @@
+{
+  "name": "@capawesome/cordova-live-update-tests",
+  "version": "0.1.0",
+  "description": "Cordova plugin tests for @capawesome/cordova-live-update.",
+  "cordova": {
+    "id": "@capawesome/cordova-live-update-tests",
+    "platforms": ["android", "ios"]
+  },
+  "keywords": ["cordova", "live update", "tests"],
+  "license": "MIT"
+}
