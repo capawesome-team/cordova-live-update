@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/capawesome-team/cordova-live-update/issues"
   },
-  "homepage": "https://capawesome.io/plugins/live-update/",
+  "homepage": "https://capawesome.io/cloud/live-updates/",
   "funding": [
     {
       "type": "github",
@@ -53,12 +53,14 @@
     "fmt": "npm run eslint -- --fix && npm run prettier -- --write",
     "eslint": "eslint . --ext ts",
     "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "release": "commit-and-tag-version"
   },
   "devDependencies": {
     "@capacitor/docgen": "^0.3.1",
     "@ionic/eslint-config": "0.4.0",
     "@types/cordova": "0.0.34",
+    "commit-and-tag-version": "12.6.1",
     "eslint": "8.57.0",
     "prettier": "3.4.2",
     "prettier-plugin-java": "2.6.7",
@@ -71,6 +73,21 @@
     "platforms": [
       "android",
       "ios"
+    ]
+  },
+  "commit-and-tag-version": {
+    "bumpFiles": [
+      { "filename": "package.json", "type": "json" },
+      { "filename": "package-lock.json", "type": "json" },
+      { "filename": "plugin.xml", "updater": "scripts/plugin-xml-version-updater.js" },
+      {
+        "filename": "src/android/io/capawesome/cordova/plugins/liveupdate/LiveUpdatePlugin.java",
+        "updater": "scripts/native-version-updater.js"
+      },
+      {
+        "filename": "src/ios/LiveUpdatePlugin.swift",
+        "updater": "scripts/native-version-updater.js"
+      }
     ]
   }
 }
