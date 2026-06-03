@@ -150,6 +150,14 @@ These map to Cordova `<preference>` entries in `config.xml`. Set them at install
 </plugin>
 ```
 
+## Demo
+
+A working example can be found here: [capawesome-team/cordova-live-update-demo](https://github.com/capawesome-team/cordova-live-update-demo)
+
+| Android                                                                                                                                              | iOS                                                                                                                                          |
+| --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img src="https://raw.githubusercontent.com/capawesome-team/cordova-live-update/main/.github/assets/demo-android.png" width="324" alt="Android Demo" /> | <img src="https://raw.githubusercontent.com/capawesome-team/cordova-live-update/main/.github/assets/demo-ios.png" width="324" alt="iOS Demo" /> |
+
 ## Usage
 
 The plugin attaches to `cordova.plugins.LiveUpdate` once `deviceready` fires.
