@@ -1111,11 +1111,10 @@ Listener for when a bundle is set as the next bundle.
 
 </docgen-api>
 
-
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md).
+See [CHANGELOG.md](https://github.com/capawesome-team/cordova-live-update/blob/main/CHANGELOG.md).
 
 ## License
 
-See [LICENSE](LICENSE).
+See [LICENSE](https://github.com/capawesome-team/cordova-live-update/blob/main/LICENSE).
