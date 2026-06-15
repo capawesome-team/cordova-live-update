@@ -1,5 +1,6 @@
 package io.capawesome.cordova.plugins.liveupdate;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
@@ -30,6 +31,7 @@ import io.capawesome.cordova.plugins.liveupdate.interfaces.Result;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaPluginPathHandler;
@@ -100,10 +102,20 @@ public class LiveUpdatePlugin extends CordovaPlugin {
             if (pathHandler == null) {
                 pathHandler = new LiveUpdatePathHandler();
             }
-            implementation = new LiveUpdate(config, this, pathHandler);
+            implementation = new LiveUpdate(config, this, createWebViewServer());
         } catch (Exception exception) {
             Log.e(TAG, "Failed to initialize LiveUpdate plugin: " + exception.getMessage(), exception);
         }
+    }
+
+    @NonNull
+    private WebViewServer createWebViewServer() {
+        Object engine = webView == null ? null : webView.getEngine();
+        if (IonicWebViewServer.isSupported(engine)) {
+            Log.d(TAG, "Detected Ionic WebView engine; serving bundles via the server base path.");
+            return new IonicWebViewServer(this, engine);
+        }
+        return new DefaultWebViewServer(this, pathHandler);
     }
 
     @Override
@@ -404,6 +416,14 @@ public class LiveUpdatePlugin extends CordovaPlugin {
 
     public Context getContext() {
         return cordova.getActivity().getApplicationContext();
+    }
+
+    public Activity getActivity() {
+        return cordova.getActivity();
+    }
+
+    public ExecutorService getThreadPool() {
+        return cordova.getThreadPool();
     }
 
     public void reloadWebView() {

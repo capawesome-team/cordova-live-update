@@ -97,7 +97,7 @@ public class LiveUpdate {
     private final LiveUpdatePlugin plugin;
 
     @NonNull
-    private final LiveUpdatePathHandler pathHandler;
+    private final WebViewServer webViewServer;
 
     @NonNull
     private final LiveUpdatePreferences preferences;
@@ -110,12 +110,12 @@ public class LiveUpdate {
     private boolean rollbackPerformed = false;
     private boolean syncInProgress = false;
 
-    public LiveUpdate(@NonNull LiveUpdateConfig config, @NonNull LiveUpdatePlugin plugin, @NonNull LiveUpdatePathHandler pathHandler)
+    public LiveUpdate(@NonNull LiveUpdateConfig config, @NonNull LiveUpdatePlugin plugin, @NonNull WebViewServer webViewServer)
         throws PackageManager.NameNotFoundException {
         this.config = config;
         this.httpClient = new LiveUpdateHttpClient(config);
         this.plugin = plugin;
-        this.pathHandler = pathHandler;
+        this.webViewServer = webViewServer;
         this.preferences = new LiveUpdatePreferences(plugin.getContext());
 
         // Check version and reset config (and the next bundle) if the native app
@@ -128,7 +128,9 @@ public class LiveUpdate {
         // the current server base path on each cold start).
         String nextBundleId = preferences.getNextBundleId();
         if (nextBundleId != null && hasBundleById(nextBundleId)) {
-            pathHandler.setActiveBundleDir(buildBundleDirectoryFor(nextBundleId));
+            webViewServer.prime(buildBundleDirectoryFor(nextBundleId));
+        } else {
+            webViewServer.prime(null);
         }
 
         // Set the device ID on the HTTP client (after any potential config reset)
@@ -1121,7 +1123,7 @@ public class LiveUpdate {
      */
     @Nullable
     private String getCurrentBundleId() {
-        File dir = pathHandler.getActiveBundleDir();
+        File dir = webViewServer.getActiveBundleDir();
         if (dir == null) {
             return null;
         }
@@ -1297,12 +1299,8 @@ public class LiveUpdate {
      * @param bundleId The bundle ID to set as the current bundle. If {@code null}, the default bundle will be used.
      */
     private void setCurrentBundleById(@Nullable String bundleId) {
-        if (bundleId == null) {
-            pathHandler.setActiveBundleDir(null);
-        } else {
-            pathHandler.setActiveBundleDir(buildBundleDirectoryFor(bundleId));
-        }
-        plugin.reloadWebView();
+        File bundleDir = bundleId == null ? null : buildBundleDirectoryFor(bundleId);
+        webViewServer.activate(bundleDir);
     }
 
     /**

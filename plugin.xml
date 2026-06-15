@@ -76,6 +76,12 @@
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
         <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/LiveUpdateConfig.java"
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/WebViewServer.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/DefaultWebViewServer.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/IonicWebViewServer.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
         <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/LiveUpdateHttpClient.java"
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
         <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/LiveUpdatePathHandler.java"

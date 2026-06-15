@@ -34,19 +34,26 @@ Stay up to date with the latest news and updates about the Capawesome, Capacitor
 | -------------- | ----------------------- | ------------------- | -------------- |
 | 0.1.x          | >=13.0.0                | >=7.0.0             | Active support |
 
-## ⚠️ WebView Scheme Requirement
+## WebView Compatibility
 
-This plugin replaces files served to the WebView by hooking into Cordova's official plugin extension points (`CordovaPluginPathHandler` on Android, `CDVPluginSchemeHandler` on iOS). These hooks only fire when the WebView is loading via a custom scheme — which is the **default** for modern Cordova:
+This plugin swaps the files served to the WebView by hooking into Cordova's official plugin extension points (`CordovaPluginPathHandler` on Android, `CDVPluginSchemeHandler` on iOS). These hooks only fire when the WebView loads content via a custom scheme, which is the **default** for modern Cordova:
 
-- **Android (cordova-android ≥10):** loads from `https://localhost/` via `WebViewAssetLoader`. ✅ Supported by default.
-- **iOS (cordova-ios ≥6):** loads from `app://localhost/` via `WKURLSchemeHandler`. ✅ Supported by default.
+- **Android** (cordova-android ≥10): loads from `https://localhost/` via `WebViewAssetLoader`.
+- **iOS** (cordova-ios ≥7): loads from `app://localhost/` via `WKURLSchemeHandler`.
 
-The plugin **will not work** if your app overrides these to use the legacy file scheme:
+The plugin does **NOT** work if your app forces the WebView back to the legacy `file://` scheme, for example:
 
-- ❌ `<preference name="AndroidInsecureFileModeEnabled" value="true" />`
-- ❌ `<preference name="Scheme" value="file" />`
+- `<preference name="AndroidInsecureFileModeEnabled" value="true" />`
+- `<preference name="Scheme" value="file" />`
 
-If you require these settings, this plugin is not for you.
+### cordova-plugin-ionic-webview
+
+[`cordova-plugin-ionic-webview`](https://github.com/ionic-team/cordova-plugin-ionic-webview) serves the WebView through its own local server, which bypasses the extension points above. Support therefore differs by platform:
+
+- **Android:** Supported. The plugin detects the Ionic WebView and serves bundles via its server base path instead.
+- **iOS:** Not supported. On cordova-ios 8 the plugin no longer builds (its iOS engine is unmaintained and fails the Swift Package Manager build). On cordova-ios 7 it builds, but its WebView engine bypasses `CDVPluginSchemeHandler`, so bundles are not served.
+
+We recommend removing `cordova-plugin-ionic-webview` entirely. It is no longer maintained, and modern Cordova already serves the WebView through WKWebView on iOS and the system WebView on Android — with the same custom-scheme behavior this plugin supports out of the box.
 
 ## Guides
 
