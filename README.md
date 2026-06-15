@@ -34,19 +34,29 @@ Stay up to date with the latest news and updates about the Capawesome, Capacitor
 | -------------- | ----------------------- | ------------------- | -------------- |
 | 0.1.x          | >=13.0.0                | >=7.0.0             | Active support |
 
-## ⚠️ WebView Scheme Requirement
+## WebView Compatibility
 
-This plugin replaces files served to the WebView by hooking into Cordova's official plugin extension points (`CordovaPluginPathHandler` on Android, `CDVPluginSchemeHandler` on iOS). These hooks only fire when the WebView is loading via a custom scheme — which is the **default** for modern Cordova:
+This plugin swaps the files served to the WebView by hooking into Cordova's official plugin extension points (`CordovaPluginPathHandler` on Android, `CDVPluginSchemeHandler` on iOS). These hooks only fire when the WebView loads content via a custom scheme, which is the **default** for modern Cordova:
 
-- **Android (cordova-android ≥10):** loads from `https://localhost/` via `WebViewAssetLoader`. ✅ Supported by default.
-- **iOS (cordova-ios ≥6):** loads from `app://localhost/` via `WKURLSchemeHandler`. ✅ Supported by default.
+- **Android** (cordova-android ≥10): loads from `https://localhost/` via `WebViewAssetLoader`.
+- **iOS** (cordova-ios ≥7): loads from `app://localhost/` via `WKURLSchemeHandler`.
 
-The plugin **will not work** if your app overrides these to use the legacy file scheme:
+The plugin does **NOT** work if your app forces the WebView back to the legacy `file://` scheme, for example:
 
-- ❌ `<preference name="AndroidInsecureFileModeEnabled" value="true" />`
-- ❌ `<preference name="Scheme" value="file" />`
+- `<preference name="AndroidInsecureFileModeEnabled" value="true" />`
+- `<preference name="Scheme" value="file" />`
 
-If you require these settings, this plugin is not for you.
+### cordova-plugin-ionic-webview
+
+[`cordova-plugin-ionic-webview`](https://github.com/ionic-team/cordova-plugin-ionic-webview) is **not compatible** with this plugin. It replaces the WebView with its own local server that serves content directly and never calls the extension points above, so downloaded bundles are silently ignored — `sync()` and `reload()` appear to succeed, but the WebView keeps showing the content shipped in the app binary. This affects both Android and iOS.
+
+If your app uses `cordova-plugin-ionic-webview`, remove it:
+
+```bash
+cordova plugin remove cordova-plugin-ionic-webview
+```
+
+It is no longer maintained and is no longer needed: modern Cordova serves the WebView through WKWebView on iOS and the system WebView on Android out of the box, with the same custom-scheme behavior this plugin relies on.
 
 ## Guides
 
