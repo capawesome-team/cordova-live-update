@@ -1,4 +1,4 @@
-# @capawesome/cordova-live-update
+# Cordova Live Update Plugin
 
 Cordova plugin that allows you to update your app remotely in real-time without requiring users to download a new version from the app store, also known as Over-the-Air (OTA) updates.
 
