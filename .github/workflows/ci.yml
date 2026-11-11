@@ -16,7 +16,7 @@ env:
   NODE_VERSION: 24
   # Dummy app ID so the required `APP_ID` plugin variable is satisfied during install.
   TEST_APP_ID: "00000000-0000-0000-0000-000000000000"
-  XCODE_VERSION: "16.4"
+  XCODE_VERSION: "26.6"
 
 jobs:
   build:
