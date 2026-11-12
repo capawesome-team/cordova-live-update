@@ -30,3 +30,8 @@ local.properties
 *.xcodeproj/project.xcworkspace/xcuserdata/
 DerivedData/
 xcuserdata/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved

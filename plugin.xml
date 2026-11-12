@@ -177,7 +177,7 @@
     </platform>
 
     <!-- ===================== iOS ===================== -->
-    <platform name="ios">
+    <platform name="ios" package="swift">
         <config-file target="config.xml" parent="/*">
             <feature name="LiveUpdate">
                 <param name="ios-package" value="CapawesomeLiveUpdatePlugin"/>
@@ -218,8 +218,8 @@
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="Alamofire" spec="~> 5.9"/>
-                <pod name="ZIPFoundation" spec="~> 0.9"/>
+                <pod name="Alamofire" spec="~> 5.9" nospm="true"/>
+                <pod name="ZIPFoundation" spec="~> 0.9" nospm="true"/>
             </pods>
         </podspec>
 
