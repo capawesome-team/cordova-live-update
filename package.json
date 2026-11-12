@@ -8,6 +8,7 @@
     "dist/",
     "src/android/",
     "src/ios/",
+    "Package.swift",
     "plugin.xml",
     "LICENSE",
     "README.md"
