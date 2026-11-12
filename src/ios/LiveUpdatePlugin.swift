@@ -6,7 +6,7 @@ import WebKit
 @objc(CapawesomeLiveUpdatePlugin)
 public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
     public static let tag = "LiveUpdate"
-    public static let version = "0.1.0"
+    public static let version = "0.1.0" // x-release-please-version
     public static let userDefaultsPrefix = "CapawesomeLiveUpdate" // DO NOT CHANGE
 
     private let eventDownloadBundleProgress = "downloadBundleProgress"
