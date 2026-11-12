@@ -41,7 +41,7 @@ import org.json.JSONObject;
 public class LiveUpdatePlugin extends CordovaPlugin {
 
     public static final String TAG = "LiveUpdate";
-    public static final String VERSION = "0.1.0";
+    public static final String VERSION = "0.1.0"; // x-release-please-version
     public static final String SHARED_PREFERENCES_NAME = "CapawesomeLiveUpdate"; // DO NOT CHANGE
     public static final String ERROR_APP_ID_MISSING = "appId must be configured.";
     public static final String ERROR_BUNDLE_EXISTS = "bundle already exists.";

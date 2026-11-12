@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "node",
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": true,
+  "include-component-in-tag": false,
+  "extra-files": [
+    {
+      "type": "generic",
+      "path": "plugin.xml"
+    },
+    {
+      "type": "generic",
+      "path": "src/android/io/capawesome/cordova/plugins/liveupdate/LiveUpdatePlugin.java"
+    },
+    {
+      "type": "generic",
+      "path": "src/ios/LiveUpdatePlugin.swift"
+    }
+  ],
+  "packages": {
+    ".": {}
+  }
+}
