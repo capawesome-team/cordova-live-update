@@ -7,12 +7,19 @@ import UIKit
 
 // swiftlint:disable type_body_length
 @objc public class LiveUpdate: NSObject {
+    private static let downloadsDirectoryUrl = FileManager.default
+        .urls(for: .cachesDirectory, in: .userDomainMask).first!
+        .appendingPathComponent("capawesome_live_update_downloads")
+    /// Deletes the leftovers of downloads that a process kill interrupted. Runs once per process and
+    /// blocks concurrent initializers until it is done, so no other instance can have a download in flight.
+    private static let interruptedDownloadsDeleted: Void = {
+        try? FileManager.default.removeItem(at: downloadsDirectoryUrl)
+    }()
+
     private let autoUpdateIntervalMs: Int64 = 15 * 60 * 1000 // 15 minutes
     private let bundlesDirectory = "NoCloud/capawesome_live_update_bundles" // DO NOT CHANGE!
-    private let cachesDirectoryUrl = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
     private let config: LiveUpdateConfig
     private let defaultWebAssetDir = "www" // Cordova builds place web assets under "www/" inside the app bundle.
-    private let downloadsDirectory = "capawesome_live_update_downloads"
     private let httpClient: LiveUpdateHttpClient
     private let libraryDirectoryUrl = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
     private let manifestFileName = "capawesome-live-update-manifest.json" // DO NOT CHANGE!
@@ -48,8 +55,7 @@ import UIKit
         // Set the device ID on the HTTP client (after any potential config reset)
         self.httpClient.setDeviceId(getDeviceId())
 
-        // Delete the leftovers of downloads that were interrupted by a process kill
-        tryDeleteDownloadsDirectory()
+        _ = Self.interruptedDownloadsDeleted
 
         // Start the rollback timer to rollback to the default bundle
         // if the app is not ready after a certain time
@@ -312,7 +318,12 @@ import UIKit
         }
         createBundlesDirectory()
         let bundlePath = buildBundlePathFor(bundleId: bundleId)
-        try FileManager.default.moveItem(atPath: indexHtmlFile.deletingLastPathComponent().path, toPath: bundlePath)
+        do {
+            try FileManager.default.moveItem(atPath: indexHtmlFile.deletingLastPathComponent().path, toPath: bundlePath)
+        } catch where hasBundleById(bundleId) {
+            // A concurrent download of the same bundle was installed first
+            NSLog("[\(LiveUpdatePlugin.tag)] Bundle already installed: \(bundleId)")
+        }
     }
 
     private func addBundleOfTypeManifest(bundleId: String, directory: URL) async throws {
@@ -333,7 +344,7 @@ import UIKit
     }
 
     private func buildDownloadsDirectoryUrl() -> URL {
-        return cachesDirectoryUrl.appendingPathComponent(downloadsDirectory)
+        return Self.downloadsDirectoryUrl
     }
 
     private func copyCurrentBundleFile(fileToCopy: LiveUpdateManifestItem, toDirectory: URL) throws {
@@ -821,10 +832,6 @@ import UIKit
         } catch {
             NSLog("[\(LiveUpdatePlugin.tag)] Failed to delete directory: \(url.path)")
         }
-    }
-
-    private func tryDeleteDownloadsDirectory() {
-        tryDeleteDirectory(buildDownloadsDirectoryUrl())
     }
 
     private func unzipDownloadedBundle(zipFile: URL) throws -> URL {

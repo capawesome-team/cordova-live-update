@@ -79,6 +79,8 @@ import org.json.JSONObject;
 
 public class LiveUpdate {
 
+    private static final AtomicBoolean downloadsDirectoryDeleted = new AtomicBoolean(false);
+
     private final long autoUpdateIntervalMs = 15 * 60 * 1000; // 15 minutes
 
     @NonNull
@@ -135,8 +137,11 @@ public class LiveUpdate {
         // Set the device ID on the HTTP client (after any potential config reset)
         this.httpClient.setDeviceId(getDeviceId());
 
-        // Delete the leftovers of downloads that were interrupted by a process kill
-        tryDeleteDownloadsDirectory();
+        // Delete the leftovers of downloads that were interrupted by a process kill.
+        // Only once per process, because other instances may be downloading at this moment.
+        if (downloadsDirectoryDeleted.compareAndSet(false, true)) {
+            tryDeleteDownloadsDirectory();
+        }
 
         // Start the rollback timer to rollback to the default bundle
         // if the app is not ready after a certain time
@@ -546,7 +551,8 @@ public class LiveUpdate {
         // Move the bundle directory to the bundles directory
         File bundleDirectory = buildBundleDirectoryFor(bundleId);
         boolean moved = indexHtmlFile.getParentFile().renameTo(bundleDirectory);
-        if (!moved) {
+        // A concurrent download of the same bundle may have finished first
+        if (!moved && !hasBundleById(bundleId)) {
             throw new Exception(LiveUpdatePlugin.ERROR_BUNDLE_MOVE_FAILED);
         }
     }
