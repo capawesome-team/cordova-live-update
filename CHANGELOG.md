@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2](https://github.com/capawesome-team/cordova-live-update/compare/v0.1.1...v0.1.2) (2026-11-19)
+
+
+### Bug Fixes
+
+* delete temporary download files after the bundle was added or the download failed ([#10](https://github.com/capawesome-team/cordova-live-update/issues/10)) ([2f755ca](https://github.com/capawesome-team/cordova-live-update/commit/2f755ca5b002e71c0cfdc41430c5ab8cf1e705c9))
+* **ios:** validate HTTP status, ignore `URLCache` and overwrite leftover files ([#8](https://github.com/capawesome-team/cordova-live-update/issues/8)) ([35d8d37](https://github.com/capawesome-team/cordova-live-update/commit/35d8d3737b7e88b6815c8c2259a114240214ee8b))
+
 ## [0.1.1](https://github.com/capawesome-team/cordova-live-update/compare/v0.1.0...v0.1.1) (2026-11-12)
 
 
