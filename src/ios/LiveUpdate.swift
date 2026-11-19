@@ -7,9 +7,17 @@ import UIKit
 
 // swiftlint:disable type_body_length
 @objc public class LiveUpdate: NSObject {
+    private static let downloadsDirectoryUrl = FileManager.default
+        .urls(for: .cachesDirectory, in: .userDomainMask).first!
+        .appendingPathComponent("capawesome_live_update_downloads")
+    /// Deletes the leftovers of downloads that a process kill interrupted. Runs once per process and
+    /// blocks concurrent initializers until it is done, so no other instance can have a download in flight.
+    private static let interruptedDownloadsDeleted: Void = {
+        try? FileManager.default.removeItem(at: downloadsDirectoryUrl)
+    }()
+
     private let autoUpdateIntervalMs: Int64 = 15 * 60 * 1000 // 15 minutes
     private let bundlesDirectory = "NoCloud/capawesome_live_update_bundles" // DO NOT CHANGE!
-    private let cachesDirectoryUrl = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
     private let config: LiveUpdateConfig
     private let defaultWebAssetDir = "www" // Cordova builds place web assets under "www/" inside the app bundle.
     private let httpClient: LiveUpdateHttpClient
@@ -46,6 +54,8 @@ import UIKit
 
         // Set the device ID on the HTTP client (after any potential config reset)
         self.httpClient.setDeviceId(getDeviceId())
+
+        _ = Self.interruptedDownloadsDeleted
 
         // Start the rollback timer to rollback to the default bundle
         // if the app is not ready after a certain time
@@ -308,7 +318,12 @@ import UIKit
         }
         createBundlesDirectory()
         let bundlePath = buildBundlePathFor(bundleId: bundleId)
-        try FileManager.default.moveItem(atPath: indexHtmlFile.deletingLastPathComponent().path, toPath: bundlePath)
+        do {
+            try FileManager.default.moveItem(atPath: indexHtmlFile.deletingLastPathComponent().path, toPath: bundlePath)
+        } catch where hasBundleById(bundleId) {
+            // A concurrent download of the same bundle was installed first
+            NSLog("[\(LiveUpdatePlugin.tag)] Bundle already installed: \(bundleId)")
+        }
     }
 
     private func addBundleOfTypeManifest(bundleId: String, directory: URL) async throws {
@@ -316,7 +331,7 @@ import UIKit
     }
 
     private func addBundleOfTypeZip(bundleId: String, zipFile: URL) async throws {
-        let unzippedDirectory = try unzipFile(zipFile: zipFile)
+        let unzippedDirectory = try unzipDownloadedBundle(zipFile: zipFile)
         try addBundle(bundleId: bundleId, directory: unzippedDirectory)
     }
 
@@ -326,6 +341,10 @@ import UIKit
 
     private func buildBundleURLFor(bundleId: String) -> URL {
         return libraryDirectoryUrl.appendingPathComponent(bundlesDirectory).appendingPathComponent(bundleId)
+    }
+
+    private func buildDownloadsDirectoryUrl() -> URL {
+        return Self.downloadsDirectoryUrl
     }
 
     private func copyCurrentBundleFile(fileToCopy: LiveUpdateManifestItem, toDirectory: URL) throws {
@@ -373,8 +392,8 @@ import UIKit
         }
     }
 
-    private func createTemporaryDirectory() throws -> URL {
-        let temporaryDirectory = cachesDirectoryUrl.appendingPathComponent(UUID().uuidString)
+    private func createTemporaryDownloadDirectory() throws -> URL {
+        let temporaryDirectory = buildDownloadsDirectoryUrl().appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true, attributes: nil)
         return temporaryDirectory
     }
@@ -469,7 +488,9 @@ import UIKit
     }
 
     private func downloadBundleOfTypeManifest(bundleId: String, url: String) async throws {
-        let temporaryDirectory = try createTemporaryDirectory()
+        // Create a temporary directory that is deleted once the download completed or failed
+        let temporaryDirectory = try createTemporaryDownloadDirectory()
+        defer { tryDeleteDirectory(temporaryDirectory) }
         let latestManifestFile = try await downloadBundleFile(baseUrl: url, href: manifestFileName, directory: temporaryDirectory, callback: nil)
         let latestManifest = try loadManifest(file: latestManifestFile)
         let currentManifest = try loadCurrentManifest()
@@ -493,13 +514,15 @@ import UIKit
     }
 
     private func downloadBundleOfTypeZip(bundleId: String, checksum: String?, signature: String?, url: String) async throws {
-        let timestamp = String(Int(Date().timeIntervalSince1970))
-        let temporaryZipFileUrl = cachesDirectoryUrl.appendingPathComponent(timestamp + ".zip")
-        try await downloadAndVerifyFile(url: url, file: temporaryZipFileUrl, checksum: checksum, signature: signature, callback: { progress in
+        // Create a temporary directory that is deleted once the download completed or failed
+        let temporaryDirectory = try createTemporaryDownloadDirectory()
+        defer { tryDeleteDirectory(temporaryDirectory) }
+        let zipFile = temporaryDirectory.appendingPathComponent("bundle.zip")
+        try await downloadAndVerifyFile(url: url, file: zipFile, checksum: checksum, signature: signature, callback: { progress in
             let event = LiveUpdateDownloadBundleProgressEvent(bundleId: bundleId, downloadedBytes: progress.completedUnitCount, totalBytes: progress.totalUnitCount)
             self.notifyDownloadBundleProgressListeners(event)
         })
-        try await addBundleOfTypeZip(bundleId: bundleId, zipFile: temporaryZipFileUrl)
+        try await addBundleOfTypeZip(bundleId: bundleId, zipFile: zipFile)
     }
 
     private func fetchLatestBundle(_ options: LiveUpdateFetchLatestBundleOptions) async throws -> LiveUpdateGetLatestBundleResponse? {
@@ -800,8 +823,19 @@ import UIKit
         }
     }
 
-    private func unzipFile(zipFile: URL) throws -> URL {
-        let destinationDirectory = zipFile.deletingPathExtension()
+    private func tryDeleteDirectory(_ url: URL) {
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            return
+        }
+        do {
+            try FileManager.default.removeItem(at: url)
+        } catch {
+            NSLog("[\(LiveUpdatePlugin.tag)] Failed to delete directory: \(url.path)")
+        }
+    }
+
+    private func unzipDownloadedBundle(zipFile: URL) throws -> URL {
+        let destinationDirectory = zipFile.deletingLastPathComponent().appendingPathComponent("bundle")
         try FileManager.default.createDirectory(at: destinationDirectory, withIntermediateDirectories: true, attributes: nil)
         try FileManager.default.unzipItem(at: zipFile, to: destinationDirectory)
         return destinationDirectory
