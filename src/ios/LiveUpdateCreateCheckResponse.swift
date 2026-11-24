@@ -28,12 +28,12 @@ struct LiveUpdateCreateCheckResponse {
         return LiveUpdateCreateCheckResponse(bundle: nil, reason: nil, result: nil, retryAfterMs: nil)
     }
 
-    /// - Throws: `LiveUpdateError.requestFailed` for every status other than 200 and 429.
+    /// - Throws: `LiveUpdateError.requestFailed` for every status other than 200, 429 and 503.
     static func parse(statusCode: Int, retryAfter: String?, body: String?) throws -> LiveUpdateCreateCheckResponse {
         switch statusCode {
         case 200:
             return parseBody(body)
-        case 429:
+        case 429, 503:
             return LiveUpdateCreateCheckResponse(bundle: nil, reason: nil, result: nil, retryAfterMs: parseRetryAfterMs(retryAfter))
         default:
             throw LiveUpdateError.requestFailed(message: "The check failed with status \(statusCode).")

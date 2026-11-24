@@ -531,7 +531,7 @@ public class LiveUpdate {
     }
 
     /**
-     * Applies the wait of a 429 and clears the reported failure after a 200.
+     * Applies the wait of a 429 or a 503 and clears the reported failure after a 200.
      */
     @NonNull
     private NonEmptyCallback<Response> buildCheckCallback(
@@ -1116,7 +1116,7 @@ public class LiveUpdate {
         try {
             String appId = requireAppId();
             if (isCheckWaiting(appId)) {
-                Log.d(LiveUpdatePlugin.TAG, "No update available. No check was made because the device is rate limited.");
+                Log.d(LiveUpdatePlugin.TAG, "No update available. No check was made because the server asked to wait.");
                 callback.success(CreateCheckResponse.createWithoutUpdate());
                 return;
             }
@@ -1363,7 +1363,7 @@ public class LiveUpdate {
     }
 
     /**
-     * The wait is the time that the server asked for after a 429.
+     * The wait is the time that the server asked for after a 429 or a 503.
      */
     private boolean isCheckWaiting(@NonNull String appId) {
         Long waitEndsAt = checkWaitEndsAt.get(appId);

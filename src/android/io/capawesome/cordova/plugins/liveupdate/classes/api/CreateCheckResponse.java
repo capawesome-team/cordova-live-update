@@ -63,11 +63,11 @@ public class CreateCheckResponse {
     }
 
     /**
-     * @throws Exception For every status other than 200 and 429.
+     * @throws Exception For every status other than 200, 429 and 503.
      */
     @NonNull
     public static CreateCheckResponse parse(int statusCode, @Nullable String retryAfter, @NonNull String body) throws Exception {
-        if (statusCode == 429) {
+        if (statusCode == 429 || statusCode == 503) {
             CreateCheckResponse response = new CreateCheckResponse();
             response.retryAfterMs = parseRetryAfterMs(retryAfter);
             return response;

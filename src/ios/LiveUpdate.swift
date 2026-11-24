@@ -15,7 +15,7 @@ import UIKit
     private static let interruptedDownloadsDeleted: Void = {
         try? FileManager.default.removeItem(at: downloadsDirectoryUrl)
     }()
-    /// The wait after a 429 per app id, from the answer until the wait ends.
+    /// The wait after a 429 or a 503 per app id, from the answer until the wait ends.
     /// Kept in memory only, so a restart of the app always checks.
     private static var checkWaits = [String: DateInterval]()
     /// Guards `checkWaits`: checks can run at the same time.
@@ -584,7 +584,7 @@ import UIKit
     private func fetchCheck(_ options: LiveUpdateFetchLatestBundleOptions) async throws -> LiveUpdateCreateCheckResponse {
         let appId = try requireAppId()
         if isCheckWaiting(appId: appId) {
-            NSLog("%@", "[\(LiveUpdatePlugin.tag)] No update available. No check was made because the device is rate limited.")
+            NSLog("%@", "[\(LiveUpdatePlugin.tag)] No update available. No check was made because the server asked to wait.")
             return LiveUpdateCreateCheckResponse.createWithoutUpdate()
         }
         let pendingFailure = getPendingFailure(appId: appId)
@@ -596,7 +596,7 @@ import UIKit
         if let retryAfterMs = checkResponse.retryAfterMs {
             startCheckWait(appId: appId, retryAfterMs: retryAfterMs)
         } else if let pendingFailure = pendingFailure {
-            // Only a 200 comes without a wait, because every status other than 200 and 429 throws.
+            // Only a 200 comes without a wait, because every status other than 200, 429 and 503 throws.
             preferences.removeReportedFailure(pendingFailure)
         }
         return checkResponse
@@ -828,7 +828,7 @@ import UIKit
         plugin.notifyDownloadBundleProgressListeners(event)
     }
 
-    /// Throws if the server could not be reached or answered with a status other than 200 and 429.
+    /// Throws if the server could not be reached or answered with a status other than 200, 429 and 503.
     private func parseCheckResponse(_ response: AFDataResponse<Data?>) throws -> LiveUpdateCreateCheckResponse {
         let body = response.data.flatMap { String(bytes: $0, encoding: .utf8) }
         if let body = body {
