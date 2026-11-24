@@ -54,6 +54,7 @@ public class LiveUpdatePlugin extends CordovaPlugin {
     public static final String ERROR_CUSTOM_ID_MISSING = "customId must be provided.";
     public static final String ERROR_DOWNLOAD_FAILED = "Bundle could not be downloaded.";
     public static final String ERROR_HTTP_TIMEOUT = "Request timed out.";
+    public static final String ERROR_MANIFEST_INVALID = "The bundle manifest could not be read.";
     public static final String ERROR_URL_MISSING = "url must be provided.";
     public static final String ERROR_SIGNATURE_VERIFICATION_FAILED = "Signature verification failed.";
     public static final String ERROR_PUBLIC_KEY_INVALID = "Invalid public key.";
@@ -123,6 +124,31 @@ public class LiveUpdatePlugin extends CordovaPlugin {
         super.onResume(multitasking);
         if (implementation != null) {
             implementation.handleOnResume();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (implementation != null) {
+            implementation.handleOnStart();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (implementation != null) {
+            implementation.handleOnStop();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Cordova replaces the plugin without calling onStop, so the timer of the old instance must not fire.
+        if (implementation != null) {
+            implementation.handleOnStop();
         }
     }
 

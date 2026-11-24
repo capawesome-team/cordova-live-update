@@ -7,13 +7,20 @@ import Foundation
         self.items = items
     }
 
-    public static func findDuplicateItems(_ manifest1: LiveUpdateManifest, _ manifest2: LiveUpdateManifest) -> [LiveUpdateManifestItem] {
-        let checksumSet = Set(manifest2.items.map { $0.checksum })
-        return manifest1.items.filter { checksumSet.contains($0.checksum) }
+    /// - Returns: Per checksum, the first path that holds this content.
+    func mapFirstHrefsByChecksum() -> [String: String] {
+        var hrefsByChecksum = [String: String]()
+        for item in items where hrefsByChecksum[item.checksum] == nil {
+            hrefsByChecksum[item.checksum] = item.href
+        }
+        return hrefsByChecksum
     }
 
-    public static func findMissingItems(_ manifest1: LiveUpdateManifest, _ manifest2: LiveUpdateManifest) -> [LiveUpdateManifestItem] {
-        let checksumSet = Set(manifest2.items.map { $0.checksum })
-        return manifest1.items.filter { !checksumSet.contains($0.checksum) }
+    /// - Returns: `nil` if the data is not a JSON list or an item cannot be used.
+    static func parse(_ data: Data) -> LiveUpdateManifest? {
+        guard let items = try? JSONDecoder().decode([LiveUpdateManifestItem].self, from: data) else {
+            return nil
+        }
+        return LiveUpdateManifest(items: items)
     }
 }

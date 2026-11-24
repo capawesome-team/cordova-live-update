@@ -3,23 +3,28 @@ package io.capawesome.cordova.plugins.liveupdate;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.capawesome.cordova.plugins.liveupdate.interfaces.DownloadProgressCallback;
-import io.capawesome.cordova.plugins.liveupdate.interfaces.EmptyCallback;
 import io.capawesome.cordova.plugins.liveupdate.interfaces.NonEmptyCallback;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
+import org.json.JSONObject;
 
 public class LiveUpdateHttpClient {
+
+    private static final MediaType JSON_MEDIA_TYPE = MediaType.get("application/json; charset=utf-8");
+    private static final String USER_AGENT = "capawesome-cordova-live-update/" + LiveUpdatePlugin.VERSION + " (android)";
 
     @NonNull
     private final LiveUpdateConfig config;
@@ -68,28 +73,24 @@ public class LiveUpdateHttpClient {
         this.deviceId = deviceId;
     }
 
-    public Call enqueue(String url, NonEmptyCallback<Response> callback) {
-        Request.Builder builder = new Request.Builder().url(url);
-        if (deviceId != null) {
-            builder.addHeader("X-Capawesome-Device-Id", deviceId);
-        }
-        Request request = builder.build();
+    @NonNull
+    public Call enqueue(@NonNull String url, @NonNull NonEmptyCallback<Response> callback) {
+        return enqueue(buildRequest(url), callback);
+    }
 
-        Call call = okHttpClient.newCall(request);
-        call.enqueue(
-            new Callback() {
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) {
-                    callback.success(response);
-                }
+    @NonNull
+    public Call enqueuePost(@NonNull String url, @NonNull JSONObject body, @NonNull NonEmptyCallback<Response> callback) {
+        return enqueue(buildPostRequest(url, body), callback);
+    }
 
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    callback.error(new Exception(e));
-                }
-            }
-        );
-        return call;
+    @NonNull
+    public Call enqueueWithDeviceId(@NonNull String url, @NonNull NonEmptyCallback<Response> callback) {
+        return enqueue(buildRequestWithDeviceId(url), callback);
+    }
+
+    @NonNull
+    public Call enqueueWithoutCompression(@NonNull String url, @NonNull NonEmptyCallback<Response> callback) {
+        return enqueue(buildRequestWithoutCompression(url), callback);
     }
 
     public static void writeResponseBodyToFile(ResponseBody body, File file, @Nullable DownloadProgressCallback callback)
@@ -110,5 +111,55 @@ public class LiveUpdateHttpClient {
         sink.flush();
         sink.close();
         source.close();
+    }
+
+    @NonNull
+    private Request buildPostRequest(@NonNull String url, @NonNull JSONObject body) {
+        RequestBody requestBody = RequestBody.create(body.toString(), JSON_MEDIA_TYPE);
+        return createRequestBuilder(url).post(requestBody).build();
+    }
+
+    @NonNull
+    private Request buildRequest(@NonNull String url) {
+        return createRequestBuilder(url).build();
+    }
+
+    @NonNull
+    private Request buildRequestWithDeviceId(@NonNull String url) {
+        Request.Builder builder = createRequestBuilder(url);
+        if (deviceId != null) {
+            builder.addHeader("X-Capawesome-Device-Id", deviceId);
+        }
+        return builder.build();
+    }
+
+    @NonNull
+    private Request buildRequestWithoutCompression(@NonNull String url) {
+        // A compressed answer has no `Content-Length`, so the download progress would have no total
+        return createRequestBuilder(url).header("Accept-Encoding", "identity").build();
+    }
+
+    @NonNull
+    private Request.Builder createRequestBuilder(@NonNull String url) {
+        return new Request.Builder().url(url).header("User-Agent", USER_AGENT);
+    }
+
+    @NonNull
+    private Call enqueue(@NonNull Request request, @NonNull NonEmptyCallback<Response> callback) {
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(
+            new Callback() {
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
+                    callback.success(response);
+                }
+
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    callback.error(e);
+                }
+            }
+        );
+        return call;
     }
 }

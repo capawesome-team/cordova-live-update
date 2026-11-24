@@ -6,13 +6,15 @@ public enum LiveUpdateError: Error {
     case bundleIdMissing
     case bundleIndexHtmlMissing
     case bundleNotFound
+    case bundleUnzipFailed(underlyingError: Error)
     case channelDiscoveryNotEnabled
     case channelMissing
     case checksumCalculationFailed
     case checksumMismatch
+    case checksumMissing
     case customIdMissing
-    case downloadFailed
-    case httpTimeout
+    case manifestInvalid
+    case requestFailed(message: String)
     case signatureMissing
     case signatureVerificationFailed
     case syncInProgress
@@ -33,6 +35,8 @@ extension LiveUpdateError: LocalizedError {
             return NSLocalizedString("The bundle does not contain an index.html file.", comment: "bundleIndexHtmlMissing")
         case .bundleNotFound:
             return NSLocalizedString("bundle not found.", comment: "bundleNotFound")
+        case .bundleUnzipFailed(let underlyingError):
+            return underlyingError.localizedDescription
         case .channelDiscoveryNotEnabled:
             return NSLocalizedString("Unauthorized. Channel Discovery may not be enabled for this app.", comment: "channelDiscoveryNotEnabled")
         case .channelMissing:
@@ -41,12 +45,14 @@ extension LiveUpdateError: LocalizedError {
             return NSLocalizedString("Failed to calculate checksum.", comment: "checksumCalculationFailed")
         case .checksumMismatch:
             return NSLocalizedString("Checksum mismatch.", comment: "checksumMismatch")
+        case .checksumMissing:
+            return NSLocalizedString("Bundle does not contain a checksum.", comment: "checksumMissing")
         case .customIdMissing:
             return NSLocalizedString("customId must be provided.", comment: "customIdMissing")
-        case .downloadFailed:
-            return NSLocalizedString("Bundle could not be downloaded.", comment: "downloadFailed")
-        case .httpTimeout:
-            return NSLocalizedString("Request timed out.", comment: "httpTimeout")
+        case .manifestInvalid:
+            return NSLocalizedString("The bundle manifest could not be read.", comment: "manifestInvalid")
+        case .requestFailed(let message):
+            return message
         case .signatureMissing:
             return NSLocalizedString("Bundle does not contain a signature.", comment: "signatureMissing")
         case .signatureVerificationFailed:

@@ -2,6 +2,8 @@ package io.capawesome.cordova.plugins.liveupdate.classes.results;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.capawesome.cordova.plugins.liveupdate.classes.api.CreateCheckResponse;
+import io.capawesome.cordova.plugins.liveupdate.classes.api.CreateCheckResponseBundle;
 import io.capawesome.cordova.plugins.liveupdate.enums.ArtifactType;
 import io.capawesome.cordova.plugins.liveupdate.interfaces.Result;
 import org.json.JSONException;
@@ -27,29 +29,21 @@ public class FetchLatestBundleResult implements Result {
     @Nullable
     private final String signature;
 
-    public FetchLatestBundleResult(
-        @Nullable ArtifactType artifactType,
-        @Nullable String bundleId,
-        @Nullable String checksum,
-        @Nullable JSONObject customProperties,
-        @Nullable String downloadUrl,
-        @Nullable String signature
-    ) {
-        this.artifactType = artifactType;
-        this.bundleId = bundleId;
-        this.checksum = checksum;
-        this.customProperties = customProperties;
-        this.downloadUrl = downloadUrl;
-        this.signature = signature;
+    public FetchLatestBundleResult(@NonNull CreateCheckResponse response) {
+        CreateCheckResponseBundle bundle = response.getBundle();
+        this.artifactType = bundle == null ? null : bundle.getArtifactType();
+        this.bundleId = bundle == null ? null : bundle.getId();
+        this.checksum = bundle == null ? null : bundle.getChecksum();
+        this.customProperties = bundle == null ? null : bundle.getCustomProperties();
+        this.downloadUrl = bundle == null ? null : bundle.getUrl();
+        this.signature = bundle == null ? null : bundle.getSignature();
     }
 
     @NonNull
     public JSONObject toJSObject() throws JSONException {
         JSONObject result = new JSONObject();
-        if (artifactType == ArtifactType.MANIFEST) {
-            result.put("artifactType", "manifest");
-        } else if (artifactType == ArtifactType.ZIP) {
-            result.put("artifactType", "zip");
+        if (artifactType != null) {
+            result.put("artifactType", artifactType.getValue());
         }
         result.put("bundleId", bundleId == null ? JSONObject.NULL : bundleId);
         if (checksum != null) {
