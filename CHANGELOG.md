@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.2.0](https://github.com/capawesome-team/cordova-live-update/compare/v0.1.2...v0.2.0) (2026-11-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* `sync()` and `fetchLatestBundle()` now reject when the update check fails, for example when the device is offline or the server answers with an error status. Before, a failed check resolved without an update.
+
+### Features
+
+* use the new update check and report failed updates ([#11](https://github.com/capawesome-team/cordova-live-update/issues/11)) ([29053bd](https://github.com/capawesome-team/cordova-live-update/commit/29053bdd4ed6995595644b594b2bd6c5b0e11a69))
+
+
+### Bug Fixes
+
+* resolve without an update when the update check is answered with status 503 ([#13](https://github.com/capawesome-team/cordova-live-update/issues/13)) ([078535b](https://github.com/capawesome-team/cordova-live-update/commit/078535bb427b36fafa026acb1e6a7177f723fb26))
+
 ## [0.1.2](https://github.com/capawesome-team/cordova-live-update/compare/v0.1.1...v0.1.2) (2026-11-19)
 
 
