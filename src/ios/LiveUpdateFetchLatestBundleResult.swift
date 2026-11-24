@@ -8,13 +8,14 @@ import Foundation
     private let downloadUrl: String?
     private let signature: String?
 
-    init(artifactType: LiveUpdateArtifactType?, bundleId: String?, checksum: String?, customProperties: [String: Any]?, downloadUrl: String?, signature: String?) {
-        self.artifactType = artifactType
-        self.bundleId = bundleId
-        self.checksum = checksum
-        self.customProperties = customProperties
-        self.downloadUrl = downloadUrl
-        self.signature = signature
+    init(_ response: LiveUpdateCreateCheckResponse) {
+        let bundle = response.bundle
+        self.artifactType = bundle?.artifactType
+        self.bundleId = bundle?.id
+        self.checksum = bundle?.checksum
+        self.customProperties = bundle?.customProperties
+        self.downloadUrl = bundle?.url
+        self.signature = bundle?.signature
     }
 
     public func toJSObject() -> [String: Any] {

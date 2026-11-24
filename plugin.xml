@@ -86,15 +86,25 @@
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate"/>
 
         <!-- classes/ -->
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/JsonFields.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes"/>
         <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/Manifest.java"
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes"/>
         <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/ManifestItem.java"
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/UpdateFailure.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/UrlTemplate.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes"/>
 
         <!-- classes/api/ -->
-        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/api/GetChannelsResponseItem.java"
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/api/CreateCheckRequest.java"
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/api"/>
-        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/api/GetLatestBundleResponse.java"
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/api/CreateCheckResponse.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/api"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/api/CreateCheckResponseBundle.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/api"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/classes/api/GetChannelsResponseItem.java"
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate/classes/api"/>
 
         <!-- classes/events/ -->
@@ -162,15 +172,25 @@
         <!-- enums/ -->
         <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/enums/ArtifactType.java"
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate/enums"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/enums/CheckResult.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/enums"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/enums/FailureReason.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/enums"/>
 
         <!-- interfaces/ -->
         <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/interfaces/Callback.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/interfaces"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/interfaces/CallbackStep.java"
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate/interfaces"/>
         <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/interfaces/DownloadProgressCallback.java"
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate/interfaces"/>
         <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/interfaces/EmptyCallback.java"
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate/interfaces"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/interfaces/FileVerifier.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/interfaces"/>
         <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/interfaces/NonEmptyCallback.java"
+                     target-dir="src/io/capawesome/cordova/plugins/liveupdate/interfaces"/>
+        <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/interfaces/ResponseBodyHandler.java"
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate/interfaces"/>
         <source-file src="src/android/io/capawesome/cordova/plugins/liveupdate/interfaces/Result.java"
                      target-dir="src/io/capawesome/cordova/plugins/liveupdate/interfaces"/>
@@ -226,11 +246,16 @@
         <source-file src="src/ios/LiveUpdate.swift"/>
         <source-file src="src/ios/LiveUpdateArtifactType.swift"/>
         <source-file src="src/ios/LiveUpdateChannelResult.swift"/>
+        <source-file src="src/ios/LiveUpdateCheckResult.swift"/>
         <source-file src="src/ios/LiveUpdateConfig.swift"/>
+        <source-file src="src/ios/LiveUpdateCreateCheckRequest.swift"/>
+        <source-file src="src/ios/LiveUpdateCreateCheckResponse.swift"/>
         <source-file src="src/ios/LiveUpdateDeleteBundleOptions.swift"/>
         <source-file src="src/ios/LiveUpdateDownloadBundleOptions.swift"/>
         <source-file src="src/ios/LiveUpdateDownloadBundleProgressEvent.swift"/>
         <source-file src="src/ios/LiveUpdateError.swift"/>
+        <source-file src="src/ios/LiveUpdateFailure.swift"/>
+        <source-file src="src/ios/LiveUpdateFailureReason.swift"/>
         <source-file src="src/ios/LiveUpdateFetchChannelsOptions.swift"/>
         <source-file src="src/ios/LiveUpdateFetchChannelsResult.swift"/>
         <source-file src="src/ios/LiveUpdateFetchLatestBundleOptions.swift"/>
@@ -244,7 +269,6 @@
         <source-file src="src/ios/LiveUpdateGetCustomIdResult.swift"/>
         <source-file src="src/ios/LiveUpdateGetDeviceIdResult.swift"/>
         <source-file src="src/ios/LiveUpdateGetDownloadedBundlesResult.swift"/>
-        <source-file src="src/ios/LiveUpdateGetLatestBundleResponse.swift"/>
         <source-file src="src/ios/LiveUpdateGetNextBundleResult.swift"/>
         <source-file src="src/ios/LiveUpdateGetVersionCodeResult.swift"/>
         <source-file src="src/ios/LiveUpdateGetVersionNameResult.swift"/>
@@ -264,5 +288,6 @@
         <source-file src="src/ios/LiveUpdateSetNextBundleOptions.swift"/>
         <source-file src="src/ios/LiveUpdateSyncOptions.swift"/>
         <source-file src="src/ios/LiveUpdateSyncResult.swift"/>
+        <source-file src="src/ios/LiveUpdateUrlTemplate.swift"/>
     </platform>
 </plugin>

@@ -21,6 +21,10 @@ public class DownloadBundleProgressEvent implements Result {
         this.progress = (double) downloadedBytes / (double) totalBytes;
     }
 
+    public long getTotalBytes() {
+        return totalBytes;
+    }
+
     @NonNull
     public JSONObject toJSObject() throws JSONException {
         JSONObject result = new JSONObject();

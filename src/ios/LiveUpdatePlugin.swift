@@ -8,6 +8,8 @@ public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
     public static let tag = "LiveUpdate"
     public static let version = "0.1.2" // x-release-please-version
     public static let userDefaultsPrefix = "CapawesomeLiveUpdate" // DO NOT CHANGE
+    static let errorDownloadFailed = "Bundle could not be downloaded."
+    static let errorHttpTimeout = "Request timed out."
 
     private let eventDownloadBundleProgress = "downloadBundleProgress"
     private let eventNextBundleSet = "nextBundleSet"
@@ -18,7 +20,6 @@ public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
     private static let errorUrlMissing = "url must be provided."
     private static let errorListenerIdMissing = "listenerId must be provided."
     private static let errorPluginNotInitialized = "LiveUpdate plugin failed to initialize."
-    private static let errorHttpTimeout = "Request timed out."
 
     private var config: LiveUpdateConfig?
     private var implementation: LiveUpdate?
@@ -44,10 +45,19 @@ public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
 
         NotificationCenter.default.addObserver(
             self,
+            selector: #selector(handleAppDidEnterBackground),
+            name: UIApplication.didEnterBackgroundNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(handleAppWillEnterForeground),
             name: UIApplication.willEnterForegroundNotification,
             object: nil
         )
+        if UIApplication.shared.applicationState == .background {
+            impl.handleAppDidEnterBackground()
+        }
     }
 
     // MARK: - CDVPluginSchemeHandler conformance
@@ -77,6 +87,10 @@ public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
             }
             webView.reload()
         }
+    }
+
+    @objc private func handleAppDidEnterBackground() {
+        implementation?.handleAppDidEnterBackground()
     }
 
     @objc private func handleAppWillEnterForeground() {
@@ -471,11 +485,8 @@ public class LiveUpdatePlugin: CDVPlugin, CDVPluginSchemeHandler {
     }
 
     private func reject(_ command: CDVInvokedUrlCommand, error: Error) {
-        var message = error.localizedDescription
-        if let urlError = error as? URLError, urlError.code == .timedOut {
-            message = Self.errorHttpTimeout
-        }
-        NSLog("[\(Self.tag)] \(message)")
+        let message = error.localizedDescription
+        NSLog("%@", "[\(Self.tag)] \(message)")
         reject(command, message: message)
     }
 
